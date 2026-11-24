@@ -1,0 +1,16 @@
+node_modules/
+www/
+dist/
+*.log
+.DS_Store
+# Capacitor native build output (the ios/ and android/ projects themselves are committed once created)
+ios/App/Pods/
+ios/App/App/public/
+android/app/build/
+android/.gradle/
+android/app/src/main/assets/public/
+# signing secrets: never commit
+*.keystore
+*.jks
+*.p12
+*.mobileprovision

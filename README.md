@@ -12,6 +12,9 @@ A USABO-scope biology study game set in a 3D ocean world (three.js): sail a cont
 
 **Play:** https://rj2020bro.github.io/bioship/
 
+## Install / stores
+Install on Chromebook, phone or desktop from the Play link (Chrome: install icon in the address bar). App Store, Google Play and Steam packaging: see [PACKAGING.md](PACKAGING.md).
+
 ## Layout
 - `index.html`: current game (build 8, 3D)
 - `versions/redesign/`: redesign v1 to v7
