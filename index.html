@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#071319">
 <title>BioShip</title>
+<script src="firebase-config.js"></script>
+<script src="net.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -4224,7 +4226,7 @@ addEventListener("keydown",e=>{
 fillIcons();sndIcon();boot();
 
 /* ============ v7: loot, ranked voyage, 1v1 duels ============ */
-const cap=async n=>{try{return window.claude&&typeof window.claude.use==="function"?await window.claude.use(n):null}catch(e){return null}};
+const cap=async n=>{try{if(window.claude&&typeof window.claude.use==="function")return await window.claude.use(n);return window.BIOSHIP_NET&&window.BIOSHIP_NET.enabled?await window.BIOSHIP_NET.use(n):null}catch(e){return null}};
 const nodeKey=n=>n.type==="isl"?n.isl.id:"b"+n.leg;
 const QBN=Object.values(QB).reduce((a,b)=>a+b.length,0),DECKV=71000+QBN;
 function freshDeck(t){const n=QB[t].length,n0=Math.min(n,QB_ORIG_N[t]||0),ix=[...Array(n).keys()];return shuffle(ix.slice(n0)).concat(shuffle(ix.slice(0,n0)))}

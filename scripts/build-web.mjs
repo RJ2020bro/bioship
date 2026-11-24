@@ -9,7 +9,9 @@ rmSync(out, { recursive: true, force: true });
 mkdirSync(out, { recursive: true });
 
 let html = readFileSync(root + 'index.html', 'utf8');
-const version = createHash('sha256').update(html).digest('hex').slice(0, 12);
+const h = createHash('sha256').update(html);
+for (const f of ['net.js', 'firebase-config.js', 'pwa/sw.js']) if (existsSync(root + f)) h.update(readFileSync(root + f));
+const version = h.digest('hex').slice(0, 12);
 
 const head = `
 <link rel="manifest" href="manifest.webmanifest">
@@ -35,6 +37,7 @@ const sw = readFileSync(root + 'pwa/sw.js', 'utf8').replace('__VERSION__', versi
 writeFileSync(out + 'sw.js', sw);
 cpSync(root + 'pwa/manifest.webmanifest', out + 'manifest.webmanifest');
 cpSync(root + 'pwa/icons', out + 'icons', { recursive: true });
+for (const f of ['net.js', 'firebase-config.js']) if (existsSync(root + f)) cpSync(root + f, out + f);
 if (existsSync(root + '.nojekyll')) cpSync(root + '.nojekyll', out + '.nojekyll');
 
 console.log(`www/ built (cache version ${version})`);
