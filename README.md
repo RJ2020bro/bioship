@@ -2,7 +2,7 @@
 
 A USABO-scope biology study game set in a 3D ocean world (three.js): sail a continuous voyage through 21 islands in 7 seas, answering questions to defeat each island's guardian and open its treasure chest on the beach. Drag to look around; tap the water, ship, monster or island to interact.
 
-- A myth-accurate guardian on every island and seven bosses, each with its own attack (Zmey Gorynych's fire, Geryon's spears, the Roc's boulders, Ao the island-bearing turtle and more)
+- A myth-accurate monster on every island and a boss for every sea, each with its own attack (Zmey Gorynych's fire, Geryon's spears, the Roc's boulders, Ao the island-bearing turtle and more)
 - Your attack comes from the myth of the place: Mjölnir, Excalibur, the Ruyi Jingu Bang, Zeus's thunderbolt, the Eye of Ra, Māui's fishhook and others
 - A different chest design for every island; coins and gems spill out when it opens
 - Loot: one, two or three stars on a stop claims its Common, Rare and Legendary piece (84 to collect)
