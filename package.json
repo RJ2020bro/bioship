@@ -7,7 +7,9 @@
   "main": "electron/main.cjs",
   "author": "RJ2020bro",
   "license": "UNLICENSED",
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "build": "node scripts/build-web.mjs",
     "serve": "npm run build && npx --yes serve www -l 5173",
@@ -21,7 +23,9 @@
     "dist:win": "npm run build && electron-builder --win",
     "dist:mac": "npm run build && electron-builder --mac",
     "dist:linux": "npm run build && electron-builder --linux",
-    "dist:steam": "npm run build && electron-builder --win --mac --linux --dir"
+    "dist:steam": "npm run build && electron-builder --win --mac --linux --dir",
+    "build:net": "npx --yes esbuild@0.28.2 backend/net.src.mjs --bundle --minify --format=iife --target=es2020 --legal-comments=eof --outfile=net.js",
+    "deploy:rules": "npx --yes firebase-tools deploy --only database"
   },
   "dependencies": {
     "@capacitor/android": "^8.6.2",
@@ -35,18 +39,53 @@
     "@capacitor/assets": "^4.0.0",
     "@capacitor/cli": "^8.6.2",
     "electron": "^45.5.0",
-    "electron-builder": "^26.18.0"
+    "electron-builder": "^26.18.0",
+    "firebase": "^13.4.0"
   },
   "build": {
     "appId": "com.rj2020bro.bioship",
     "productName": "BioShip",
-    "directories": { "output": "dist" },
-    "files": ["electron/**", "www/**", "package.json"],
-    "asarUnpack": ["node_modules/steamworks.js/**"],
-    "extraFiles": [{ "from": "steam/steam_appid.txt", "to": "steam_appid.txt", "filter": ["**/*"] }],
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "electron/**",
+      "www/**",
+      "package.json"
+    ],
+    "asarUnpack": [
+      "node_modules/steamworks.js/**"
+    ],
+    "extraFiles": [
+      {
+        "from": "steam/steam_appid.txt",
+        "to": "steam_appid.txt",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
     "icon": "resources/icon.png",
-    "win": { "target": ["nsis", "dir"] },
-    "mac": { "target": ["dmg", "dir"], "category": "public.app-category.educational-games", "hardenedRuntime": true },
-    "linux": { "target": ["AppImage", "dir"], "category": "Education;Game" }
+    "win": {
+      "target": [
+        "nsis",
+        "dir"
+      ]
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "dir"
+      ],
+      "category": "public.app-category.educational-games",
+      "hardenedRuntime": true
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "dir"
+      ],
+      "category": "Education;Game"
+    }
   }
 }

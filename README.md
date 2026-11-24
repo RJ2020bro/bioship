@@ -7,7 +7,7 @@ A USABO-scope biology study game set in a 3D ocean world (three.js): sail a cont
 - A different chest design for every island; coins and gems spill out when it opens
 - Loot: one, two or three stars on a stop claims its Common, Rare and Legendary piece (120 to collect)
 - Easy / Medium / Hard difficulty; Normal, Hardcore and Ranked modes; full progress reset
-- 1v1 duels with a game code, and a ranked fastest-finish leaderboard (both need the shared Claude link, since they use its live room and database)
+- 1v1 duels with a game code, and a ranked fastest-finish leaderboard (online through Firebase once `firebase-config.js` is filled in; see PACKAGING.md)
 - 1,225 original questions at USABO/AP Biology level, dealt from per-topic shuffled decks so they don't repeat, with answer lengths balanced so the longest option isn't a giveaway
 
 **Play:** https://rj2020bro.github.io/bioship/

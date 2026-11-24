@@ -1,0 +1,30 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "names": {
+      ".read": true,
+      "$uid": {
+        ".write": "auth != null && auth.uid === $uid",
+        ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 24"
+      }
+    },
+    "ranked": {
+      ".read": true,
+      ".indexOn": ["time"],
+      "$uid": {
+        ".write": "auth != null && auth.uid === $uid",
+        ".validate": "newData.hasChildren(['stops','time','done','at']) && newData.child('stops').isNumber() && newData.child('stops').val() >= 0 && newData.child('stops').val() <= 200 && newData.child('time').isNumber() && newData.child('time').val() >= 0 && newData.child('done').isBoolean() && newData.child('at').isNumber()",
+        "name": { ".validate": "newData.isString() && newData.val().length <= 24" }
+      }
+    },
+    "rooms": {
+      "$room": {
+        ".read": "auth != null && $room.matches(/^bioship-duel-[a-z0-9]{5}$/)",
+        "$uid": {
+          ".write": "auth != null && auth.uid === $uid && $room.matches(/^bioship-duel-[a-z0-9]{5}$/)"
+        }
+      }
+    }
+  }
+}

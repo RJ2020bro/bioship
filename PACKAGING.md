@@ -9,11 +9,26 @@ All store builds wrap the same game file, `index.html`. `npm run build` copies i
 | Android (Google Play, also installs on Chromebooks) | Capacitor 8 | `npm run android` |
 | Steam (Windows / macOS / Linux) | Electron + optional steamworks.js | `npm run dist:steam` |
 
-## ⚠️ Online features need a real backend first
+## Online play (1v1 duels + ranked leaderboard)
 
-1v1 duels and the ranked leaderboard use `window.claude` (Claude artifact storage and rooms). That API only exists inside the Claude artifact page. On GitHub Pages, the App Store, Play Store and Steam it is missing, so those modes will not work. Single-player and local saves work everywhere.
+Online modes use **Firebase** (Realtime Database + anonymous sign-in), so they work on GitHub Pages, iOS, Android and Steam. Inside the Claude artifact they still use Claude storage. With no Firebase config the game runs offline and single-player still works.
 
-Before submitting to any store, either hide those modes in store builds (check `window.BIOSHIP_PLATFORM`, which is `web`, `mobile` or `desktop`) or move them to a real backend, for example Firebase (Firestore for the leaderboard, Realtime Database for duel rooms) or Supabase. On Steam, leaderboards and lobbies can also go through Steamworks.
+Players get a random captain name (e.g. "Captain Coral Finch") saved on their device. The free Spark plan is plenty (100 people online at once).
+
+### Turn it on (about 5 minutes, free)
+1. Go to https://console.firebase.google.com → **Create a project** (name it `bioship`, Analytics off).
+2. **Build → Authentication → Get started → Sign-in method → Anonymous → Enable → Save.**
+3. **Build → Realtime Database → Create database** → pick a location → **Start in locked mode**.
+4. Open the **Rules** tab, paste everything from `backend/database.rules.json`, and click **Publish**.
+5. **Project settings** (gear icon) → **Your apps** → the web icon `</>` → nickname `bioship` → **Register app**. Copy the `firebaseConfig` values.
+6. Paste those values into `firebase-config.js` in this repo (on GitHub: open the file → pencil icon → paste → **Commit changes**). Make sure `databaseURL` is filled in. Pages redeploys on its own.
+7. Under **Authentication → Settings → Authorized domains**, add `rj2020bro.github.io`.
+
+The keys in `firebase-config.js` are public by design. The rules stop anyone from writing other players' scores or seats.
+
+### Files
+- `net.js` is the bundled backend (built from `backend/net.src.mjs` with `npm run build:net`).
+- `backend/database.rules.json` holds the security rules. Update them with `npm run deploy:rules` after `npx firebase-tools login`, or paste them into the console.
 
 ## One-time setup on your computer
 
