@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="0" fill="#071319"/>
+  <g fill="none" stroke="#ede4cf" stroke-linecap="round" stroke-linejoin="round">
+    <!-- mast -->
+    <path d="M256 96 V330" stroke-width="12"/>
+    <!-- main sail with a helix stitched into it -->
+    <path d="M268 112 C330 160 344 250 318 314 H268 Z" fill="#ede4cf" stroke-width="8"/>
+    <path d="M244 132 C200 180 190 262 208 314 H244 Z" fill="#c9bfa6" stroke-width="8"/>
+    <path d="M282 150 C300 175 300 195 282 220 C264 245 264 265 282 290" stroke="#071319" stroke-width="7"/>
+    <path d="M300 150 C282 175 282 195 300 220 C318 245 318 265 300 290" stroke="#071319" stroke-width="7"/>
+    <!-- pennant -->
+    <path d="M256 96 L300 108 L256 120" fill="#e8b04f" stroke="#e8b04f" stroke-width="6"/>
+    <!-- hull -->
+    <path d="M150 334 H362 L330 384 H184 Z" fill="#ede4cf" stroke-width="8"/>
+    <!-- waves -->
+    <path d="M112 414 C144 396 176 396 208 414 S272 432 304 414 S368 396 400 414" stroke="#4fd6b0" stroke-width="12"/>
+  </g>
+</svg>

@@ -1,0 +1,8 @@
+{
+  "appId": "com.rj2020bro.bioship",
+  "appName": "BioShip",
+  "webDir": "www",
+  "backgroundColor": "#071319",
+  "ios": { "contentInset": "never", "scrollEnabled": false },
+  "android": { "allowMixedContent": false }
+}

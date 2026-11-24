@@ -1,0 +1,52 @@
+{
+  "name": "bioship",
+  "productName": "BioShip",
+  "version": "1.0.0",
+  "description": "BioShip: a 3D biology study voyage",
+  "private": true,
+  "main": "electron/main.cjs",
+  "author": "RJ2020bro",
+  "license": "UNLICENSED",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "build": "node scripts/build-web.mjs",
+    "serve": "npm run build && npx --yes serve www -l 5173",
+    "icons": "node scripts/make-icons.mjs",
+    "cap:assets": "npx capacitor-assets generate --iconBackgroundColor '#071319' --splashBackgroundColor '#071319'",
+    "cap:add": "npx cap add ios && npx cap add android",
+    "cap:sync": "npm run build && npx cap sync",
+    "ios": "npm run cap:sync && npx cap open ios",
+    "android": "npm run cap:sync && npx cap open android",
+    "desktop": "npm run build && electron .",
+    "dist:win": "npm run build && electron-builder --win",
+    "dist:mac": "npm run build && electron-builder --mac",
+    "dist:linux": "npm run build && electron-builder --linux",
+    "dist:steam": "npm run build && electron-builder --win --mac --linux --dir"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.6.2",
+    "@capacitor/core": "^8.6.2",
+    "@capacitor/ios": "^8.6.2"
+  },
+  "optionalDependencies": {
+    "steamworks.js": "^0.4.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^4.0.0",
+    "@capacitor/cli": "^8.6.2",
+    "electron": "^45.5.0",
+    "electron-builder": "^26.18.0"
+  },
+  "build": {
+    "appId": "com.rj2020bro.bioship",
+    "productName": "BioShip",
+    "directories": { "output": "dist" },
+    "files": ["electron/**", "www/**", "package.json"],
+    "asarUnpack": ["node_modules/steamworks.js/**"],
+    "extraFiles": [{ "from": "steam/steam_appid.txt", "to": "steam_appid.txt", "filter": ["**/*"] }],
+    "icon": "resources/icon.png",
+    "win": { "target": ["nsis", "dir"] },
+    "mac": { "target": ["dmg", "dir"], "category": "public.app-category.educational-games", "hardenedRuntime": true },
+    "linux": { "target": ["AppImage", "dir"], "category": "Education;Game" }
+  }
+}
