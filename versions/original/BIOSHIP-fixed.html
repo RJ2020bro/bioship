@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BIOSHIP</title>
+<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Pirata+One&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--k:#2a2118;--paper:#fffdf2;--grn:#8fd44a;--gold:#f3b63f;--red:#e0523a;--parch:#ead9a6}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{font:1.15rem "Patrick Hand",system-ui,sans-serif;color:var(--k);background:#f7f1d5 linear-gradient(#b9d39a88 1px,transparent 1px),linear-gradient(90deg,#b9d39a88 1px,transparent 1px);background-size:100% 26px,26px 100%;background-attachment:fixed}
+h1,h2,.pf{font-family:"Pirata One",Georgia,serif;font-weight:400;letter-spacing:.04em}
+#app{height:100dvh;display:flex;flex-direction:column;padding:10px 14px;gap:10px;max-width:1100px;margin:0 auto}
+.top{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;background:var(--paper);border:3px solid var(--k);border-radius:14px;padding:6px 12px;box-shadow:4px 4px 0 var(--k)}
+.stat{display:flex;flex-direction:column;align-items:center;line-height:1.1}.stat span{font-size:.78rem;opacity:.65;text-transform:uppercase;letter-spacing:.08em}.stat b{font-size:1.4rem;min-height:1.4rem}
+.pips i{display:inline-block;width:16px;height:16px;margin:0 2px;background:#8a5a2b;border:3px solid var(--k);border-radius:5px;transition:.3s}.pips i.x{background:var(--red);transform:rotate(12deg) scale(.85)}
+#track{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-top:-2px}
+#track i{width:10px;height:10px;border-radius:50%;background:#fff;border:2px solid var(--k);transition:.4s}#track i.b{border-radius:2px}#track i.d{background:var(--grn)}#track i.n{background:var(--gold);transform:scale(1.5)}
+.sea{position:relative;flex:1;min-height:170px;border:4px solid var(--k);border-radius:20px;overflow:hidden;box-shadow:5px 5px 0 var(--k);background:#3f9bd0}
+.sea>*,#far>*{position:absolute}
+.sky{left:0;right:0;top:0;height:60%;background:var(--sky);transition:background 1.2s}
+.stars{left:0;right:0;top:0;height:58%;opacity:0;transition:opacity 1.2s;background:radial-gradient(2px 2px at 12% 20%,#fff,transparent),radial-gradient(2px 2px at 36% 44%,#fff,transparent),radial-gradient(2px 2px at 58% 14%,#fff,transparent),radial-gradient(2px 2px at 78% 36%,#fff,transparent),radial-gradient(2px 2px at 90% 12%,#fff,transparent)}
+.night .stars{opacity:1}
+#sun{top:14px;right:18px;width:46px;height:46px;border-radius:50%;background:#ffd34d;border:3px solid var(--k);transition:.8s}.night #sun{background:#f1eedd;box-shadow:inset -13px -4px 0 #cfc9a8}
+.cl{top:30%;width:84px;height:24px;background:#fff;border:3px solid var(--k);border-radius:20px;animation:cl 45s linear infinite}.cl:before{content:"";position:absolute;left:14px;top:-18px;width:38px;height:32px;background:#fff;border:3px solid var(--k);border-bottom:0;border-radius:40px 40px 0 0}
+.cl.b{top:12%;animation-duration:70s;animation-delay:-30s;transform:scale(.7)}
+@keyframes cl{from{left:-110px}to{left:100%}}
+.water{left:0;right:0;top:58%;bottom:0;background:linear-gradient(#3f9bd0,#1f6fa8);border-top:3px solid var(--k)}
+.wv{left:0;right:0;height:30px;background-repeat:repeat-x;background-size:120px 30px;animation:wv 8s linear infinite}
+.wv.a{bottom:32%;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='30'><path d='M0 15Q30 2 60 15T120 15V30H0Z' fill='%23a6dcf2' stroke='%232a2118' stroke-width='3'/></svg>")}
+.wv.b{bottom:18%;animation-duration:6s;animation-direction:reverse;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='30'><path d='M0 15Q30 2 60 15T120 15V30H0Z' fill='%233f9bd0' stroke='%232a2118' stroke-width='3'/></svg>")}
+.wv.c{bottom:0;height:46px;z-index:4;animation-duration:4s;background-size:120px 46px;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='46'><path d='M0 12Q30 0 60 12T120 12V46H0Z' fill='%231f6fa8' stroke='%232a2118' stroke-width='3'/></svg>")}
+@keyframes wv{to{background-position-x:-120px}}
+#far{inset:0}#far.enter{animation:slin 1s cubic-bezier(.2,.9,.3,1)}@keyframes slin{from{transform:translateX(55%);opacity:0}}
+#isl{right:3%;bottom:20%;width:clamp(110px,15vw,200px);z-index:1;transition:filter 1s}#isl svg{width:100%;display:block}
+#obs{right:20%;bottom:16%;width:clamp(130px,18vw,260px);z-index:2}.mon{animation:loom 3s ease-in-out infinite}.mon svg{width:100%;display:block;overflow:visible}
+@keyframes loom{50%{transform:translateY(-8px) rotate(-2deg)}}
+#ship{bottom:10%;width:clamp(120px,16vw,220px);z-index:3;transition:left 1.2s cubic-bezier(.4,0,.2,1),transform 1.2s ease-in,opacity 1.2s;animation:bob 2.6s ease-in-out infinite}#ship svg{width:100%;display:block;overflow:visible}
+@keyframes bob{50%{transform:translateY(6px) rotate(2.5deg)}}
+#ship.hit{animation:shake .5s}@keyframes shake{25%{transform:translateX(-14px) rotate(-7deg)}75%{transform:translateX(14px) rotate(7deg)}}
+#ship.sink{animation:none;transform:translateY(110px) rotate(40deg);opacity:0}
+#fx{right:24%;bottom:36%;width:96px;height:96px;z-index:5;opacity:0;clip-path:polygon(50% 0,61% 20%,82% 10%,78% 33%,100% 40%,82% 56%,95% 78%,72% 76%,65% 100%,50% 82%,35% 100%,28% 76%,5% 78%,18% 56%,0 40%,22% 33%,18% 10%,39% 20%)}
+#fx.hit{background:var(--gold)}#fx.dmg{background:var(--red)}#fx.pop{animation:pop .7s}
+@keyframes pop{0%{opacity:1;transform:scale(.2) rotate(-30deg)}45%{opacity:1;transform:scale(1.4) rotate(8deg)}100%{opacity:0;transform:scale(1.7) rotate(14deg)}}
+.sea:after{content:"";position:absolute;inset:0;background:#e0523a77;opacity:0;pointer-events:none;z-index:6}.sea.flash:after{animation:fl .5s}@keyframes fl{0%{opacity:1}100%{opacity:0}}
+#banner{left:12px;top:12px;z-index:7;background:var(--parch);border:3px solid var(--k);border-radius:6px;padding:6px 14px 8px;transform:rotate(-1.5deg);box-shadow:3px 3px 0 var(--k);min-width:190px;max-width:70%}
+#btitle{font:1.6rem "Pirata One",serif;line-height:1.1}#bsub{font-size:.95rem;opacity:.8}
+.hp{height:13px;border:3px solid var(--k);background:#fff;border-radius:8px;overflow:hidden;margin-top:5px}.hp i{display:block;height:100%;background:var(--red);transition:width .7s cubic-bezier(.4,0,.2,1)}
+.panel{background:var(--paper);border:4px solid var(--k);border-radius:18px;padding:14px 16px;box-shadow:5px 5px 0 var(--k);max-height:46vh;overflow:auto}
+.meta{display:flex;justify-content:space-between;font-size:.95rem;text-transform:uppercase;letter-spacing:.08em;opacity:.75}
+.meta i{display:inline-block;width:11px;height:11px;margin-left:4px;border:2px solid var(--k);border-radius:50%}.meta i.on{background:var(--red)}
+#q{font-size:clamp(1.1rem,1.7vw,1.45rem);line-height:1.4;margin:8px 0 10px;min-height:3.2em}
+#tm{height:10px;border:2px solid var(--k);border-radius:6px;background:#fff;overflow:hidden;margin-bottom:10px}#tmb{display:block;height:100%;width:100%;background:#2b9e57;transition:width .25s linear,background .3s}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:8px}
+input{flex:1;min-width:150px;font:1.35rem "Patrick Hand",sans-serif;padding:8px 14px;border:3px solid var(--k);border-radius:12px;background:#fff;color:var(--k)}input:focus{outline:3px solid #8fd44a88}
+button{font:1.25rem "Patrick Hand",sans-serif;cursor:pointer;padding:7px 18px;border:3px solid var(--k);border-radius:14px;background:#fff;color:var(--k);box-shadow:0 4px 0 var(--k);transition:transform .08s,box-shadow .08s}
+button.go{background:linear-gradient(#b4e86a,#7ac943);font-weight:bold}button:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--k)}button:disabled{opacity:.45;cursor:default}[hidden]{display:none!important}
+#fb{margin-top:10px;line-height:1.45}.ok{color:#1f7a3d}.bad{color:#b3261e}
+.ov{position:fixed;inset:0;background:#2a211899;display:none;align-items:center;justify-content:center;padding:18px;z-index:9;backdrop-filter:blur(2px)}.ov.on{display:flex}
+.box{background:var(--paper);border:4px solid var(--k);border-radius:20px;box-shadow:6px 6px 0 var(--k);padding:24px;text-align:center;max-width:460px;animation:pop2 .45s cubic-bezier(.2,1.4,.4,1)}@keyframes pop2{from{transform:scale(.8) translateY(20px);opacity:0}}
+.box h2{margin:6px 0;font-size:2.2rem}.box p{margin:8px 0 14px}
+#home{z-index:20;background:#f7f1d5 linear-gradient(#b9d39a88 1px,transparent 1px),linear-gradient(90deg,#b9d39a88 1px,transparent 1px);background-size:100% 26px,26px 100%;backdrop-filter:none}
+#home h1{font-size:clamp(3.4rem,11vw,6.5rem);margin:0;line-height:1;text-shadow:4px 4px 0 var(--gold),-2px -2px 0 #fff}
+#hship{width:200px;margin:0 auto;animation:bob 2.6s ease-in-out infinite}#hship svg{width:100%}
+#tr{z-index:15;background:radial-gradient(#2d5f8f,#14304f);backdrop-filter:none;color:#fff;text-align:center}#tr h2{font-size:2.6rem;margin:6px 0;text-shadow:3px 3px 0 var(--k)}
+#trship{width:min(300px,70vw);margin:10px auto}#trship svg{width:100%;overflow:visible}
+.build g{opacity:0;transform-box:fill-box;transform-origin:50% 100%;animation:asm .7s cubic-bezier(.2,1.5,.4,1) forwards}.build .p1{animation-delay:.3s;--y:70px}.build .p2{animation-delay:.8s;--y:-70px}.build .p3{animation-delay:1.3s;--y:0px;transform:scaleY(.1)}.build .p4{animation-delay:1.8s;--y:-30px}
+@keyframes asm{from{opacity:0;transform:translateY(var(--y)) scale(.85)}to{opacity:1;transform:none}}
+.lv{position:relative;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:112px;height:112px;border-radius:50%;background:var(--gold);color:var(--k);border:4px solid var(--k);box-shadow:4px 4px 0 var(--k);animation:lvl .9s .1s both cubic-bezier(.2,1.6,.4,1)}.lv span{font-size:.9rem;text-transform:uppercase;letter-spacing:.1em}.lv b{font:2.4rem "Pirata One",serif;line-height:1}
+.lv:after{content:"";position:absolute;inset:-6px;border:4px solid var(--gold);border-radius:50%;animation:ring 1s .9s both}
+@keyframes lvl{from{transform:scale(0) rotate(-25deg)}}@keyframes ring{from{transform:scale(1);opacity:.9}to{transform:scale(1.9);opacity:0}}
+#trb{animation:fin .5s 2.4s both}@keyframes fin{from{opacity:0;transform:translateY(10px)}}
+@media(max-width:560px){.top{grid-template-columns:repeat(3,1fr)}#banner{max-width:78%}}
+</style></head><body>
+<div id="app">
+<header class="top"><div class="stat"><span>Hull</span><b class="pips" id="hull"></b></div><div class="stat"><span>Level</span><b id="lvl"></b></div><div class="stat"><span>Gold</span><b id="gold"></b></div><div class="stat"><span>Shield</span><b id="shd"></b></div><div class="stat"><span>Time</span><b id="clock"></b></div></header>
+<div id="track"></div>
+<section class="sea" id="sea"><div class="sky"></div><div class="stars"></div><div id="sun"></div><div class="cl"></div><div class="cl b"></div><div class="water"></div><div class="wv a"></div>
+<div id="far"><div id="isl"><svg viewBox="0 0 120 100"><g stroke="#2a2118" stroke-width="4" stroke-linejoin="round"><path d="M0 92Q20 58 60 58Q100 58 120 92Z" fill="#e8c27a"/><path d="M18 78Q38 60 60 60Q86 60 102 78Q60 70 18 78Z" fill="#6cc04a"/><path d="M62 60Q72 40 66 22" fill="none" stroke-width="6"/><path d="M66 22Q50 12 38 26Q56 20 66 22ZM66 22Q84 10 96 24Q78 20 66 22ZM66 22Q60 4 50 2Q60 12 66 22Z" fill="#3fa84a"/></g></svg></div><div id="obs"><div class="mon"></div></div></div>
+<div class="wv b"></div><div id="ship"></div><div id="fx"></div><div class="wv c"></div>
+<div id="banner"><div id="btitle"></div><div id="bsub"></div><div class="hp"><i id="hpb"></i></div></div></section>
+<section class="panel"><div class="meta"><span id="unit"></span><span id="diff"></span></div><p id="q"></p><div id="tm"><i id="tmb"></i></div>
+<div class="row"><input id="ans" autocomplete="off" placeholder="Type your answer"><button id="fire" class="go">Submit</button></div>
+<div class="row"><button id="hint"></button><button id="skip"></button><button id="next" class="go" hidden>Next</button></div><div id="fb"></div></section></div>
+<div class="ov on" id="home"><div class="box" style="background:none;border:0;box-shadow:none"><div id="hship"></div><h1>BIOSHIP</h1><p>College biology tossups across myth-haunted seas.<br>30 seconds per clue. Three correct answers reach an island. A boss guards every third one.</p><button id="play" class="go" style="font-size:1.8rem;padding:10px 46px">Play</button></div></div>
+<div class="ov" id="tr"><div class="box" style="background:none;border:0;box-shadow:none"><div id="trl"></div><div id="trship"></div><h2 id="trn"></h2><div id="trs"></div><p id="trp"></p><button id="trb" class="go">Set sail</button></div></div>
+<div class="ov" id="ov"><div class="box"><h2 id="ovt"></h2><p id="ovp"></p><button id="ovb" class="go">OK</button></div></div>
+<script>
+const Q=[
+["Replication","This enzyme class forms a transient covalent phosphotyrosine link with DNA; type II members hydrolyze ATP to pass one duplex through a break in another. Bacterial versions are poisoned by fluoroquinolones. For 10 points, name these enzymes that relieve supercoiling.","topoisomerase,topoisomerases,gyrase","Topoisomerases cut and reseal DNA to relax supercoils."],
+["Replication","Meselson and Stahl used 15N and cesium chloride density gradients to rule out the conservative and dispersive models. For 10 points, name the mode of DNA replication they confirmed.","semiconservative,semi-conservative","Each daughter duplex keeps one parental strand."],
+["Expression","This hexameric ATP-dependent RNA translocase binds C-rich rut sites on nascent transcripts and chases the polymerase off the template. For 10 points, name this bacterial termination factor, a Greek letter.","rho","Rho-dependent termination."],
+["Expression","U1 snRNP base-pairs at the 5' splice site while U2AF binds the polypyrimidine tract. The branchpoint adenosine's 2' hydroxyl attacks first, yielding a lariat. For 10 points, name this ribonucleoprotein machine.","spliceosome","Removes introns by two transesterifications."],
+["Expression","Ambros and Ruvkun found lin-4 in C. elegans, the first of these ~22-nucleotide RNAs, which are processed by Dicer and loaded onto Argonaute to repress translation via imperfect pairing with 3' UTRs. Name this class.","microrna,mirna,micro rna","miRNAs silence genes post-transcriptionally."],
+["Expression","In this bacterial mechanism, a leader peptide containing tandem trp codons lets a stalled or moving ribosome decide whether a terminator hairpin forms in the trp operon. For 10 points, name this regulatory process.","attenuation","Ribosome position controls hairpin formation."],
+["Cell","Flippases normally confine this anionic phospholipid to the inner leaflet; its exposure marks apoptotic cells as an 'eat-me' signal, and annexin V binds it. Name this phospholipid.","phosphatidylserine,ps","Exposed PS flags cells for phagocytosis."],
+["Cell","This three-legged triskelion protein assembles polyhedral cages on vesicles budding from the plasma membrane, recruited by AP2 adaptors. For 10 points, name this coat protein of receptor-mediated endocytosis.","clathrin","Clathrin-coated pits."],
+["Cell","Ritossa observed puffs in Drosophila polytene chromosomes after heat shock, leading to Hsp70 and the GroEL/GroES barrel. For 10 points, name this class of proteins that assist folding of other proteins.","chaperone,chaperones,chaperonin,chaperonins","Chaperones prevent misfolding and aggregation."],
+["Cell","Encoded on chromosome 13q14, this tumor suppressor binds E2F when hypophosphorylated and blocks the G1/S transition. Its loss causes a childhood eye cancer. Name this protein, abbreviated with two letters.","rb,retinoblastoma","Rb is phosphorylated by cyclin D/CDK4."],
+["Energetics","Peter Mitchell proposed in 1961 that electron transport couples to ATP synthesis through an electrochemical proton gradient across a membrane. For 10 points, name this theory.","chemiosmosis,chemiosmotic theory,chemiosmotic","Proton-motive force drives ATP synthase."],
+["Energetics","Cyanide, azide and carbon monoxide inhibit this heme- and copper-containing enzyme that reduces O2 to water. For 10 points, name this terminal complex of the electron transport chain.","cytochrome c oxidase,cytochrome oxidase,complex iv,complex 4","Complex IV passes four electrons to O2."],
+["Energetics","This four-carbon compound is regenerated at the end of the citric acid cycle, condenses with acetyl-CoA, and is the product of PEP carboxylase in C4 plants. Name it.","oxaloacetate,oxaloacetic acid","Oxaloacetate is the citric acid cycle acceptor."],
+["Energetics","Calvin used Chlorella and radioactive carbon-14 to find this three-carbon acid, the first stable product when rubisco fixes CO2 onto RuBP. Name it.","3-phosphoglycerate,phosphoglycerate,3pg,pga","RuBP + CO2 splits into two 3-PGA."],
+["Energetics","Rubisco's oxygenase activity makes phosphoglycolate, a process involving peroxisomes and mitochondria that consumes O2 and wastes energy in light. Name this process.","photorespiration","C4 and CAM plants minimize it."],
+["Energetics","This megacomplex of E1, E2 and E3 needs thiamine pyrophosphate, lipoate, CoA, FAD and NAD+ to convert pyruvate to acetyl-CoA. Name this enzyme complex.","pyruvate dehydrogenase,pdh,pdc,pyruvate dehydrogenase complex","The link reaction between glycolysis and the citric acid cycle."],
+["Genetics","Xist RNA coats one chromosome in female mammals, silencing it as a Barr body. This phenomenon produces calico cats. For 10 points, name it.","x inactivation,x-inactivation,lyonization","Random silencing of one X in each cell."],
+["Genetics","Barbara McClintock discovered Ac and Ds in maize: DNA segments that move by cut-and-paste or copy-and-paste. For 10 points, name these elements, nicknamed 'jumping genes'.","transposon,transposons,transposable elements,transposable element","Transposons cause mutations and genome rearrangement."],
+["Genetics","This four-stranded DNA intermediate of homologous recombination branch-migrates and is resolved by resolvases. Name it, after a British geneticist's 1964 model.","holliday,holliday junction","Resolution gives crossover or non-crossover products."],
+["Evolution","Sickle-cell allele frequency stays high in malarial regions because the Hb AS carrier has higher fitness than either homozygote. For 10 points, name this form of balancing selection, two words.","heterozygote advantage,overdominance,heterozygous advantage","Selection maintains both alleles."],
+["Evolution","Leigh Van Valen proposed that lineages must keep evolving merely to maintain fitness against evolving enemies, naming it for a Carroll character. Name this hypothesis.","red queen,red queen hypothesis","Coevolutionary arms race."],
+["Evolution","These genes contain a 180 bp DNA-binding motif and are colinear along chromosomes, specifying anterior-posterior identity; Antennapedia mutants grow legs from the head. Name these genes.","hox,hox genes,homeotic genes,homeobox","Hox genes pattern the body axis."],
+["Evolution","Motoo Kimura's neutral theory holds that most fixed molecular differences arise through this stochastic process rather than selection. Name it.","genetic drift,drift","Random sampling of alleles."],
+["Ecology","Robert Paine removed Pisaster ochraceus from tidal pools and watched mussels crowd out other species. For 10 points, name this kind of species with outsized effect.","keystone,keystone species","Removal collapses diversity."],
+["Ecology","Hamilton's rule, rB > C, explains how altruism toward relatives evolves, as in sterile worker bees. Name this type of selection.","kin selection,inclusive fitness","Genes are favored via relatives."],
+["Physiology","This pump moves 3 Na+ out and 2 K+ in per ATP, and is inhibited by ouabain and digoxin. For 10 points, name this P-type ATPase.","sodium potassium pump,sodium potassium atpase,na k atpase,sodium-potassium pump,na+ k+ atpase","It sets the resting potential gradient."],
+["Physiology","This principal excitatory CNS neurotransmitter acts on NMDA and AMPA receptors; NMDA channels need relief of a Mg2+ block and underlie long-term potentiation. Name it.","glutamate,glutamic acid","Glutamate drives LTP."],
+["Physiology","This pentameric antibody with a J chain is first secreted in a primary response and activates complement efficiently. Name this isotype.","igm","IgM is the first responder."],
+["Physiology","This law states that stroke volume rises with end-diastolic volume because of greater myocardial fiber stretch. Name it, after two physiologists (either name).","frank-starling,frank starling,starling,frank","Stretch increases contraction force."],
+["Plants","Went used oat coleoptile tips and agar blocks to show this hormone moves basipetally via PIN proteins and drives acid growth. Name this hormone.","auxin,iaa","Indole-3-acetic acid."],
+["Plants","Long sought by Chailakhyan, this mobile flowering signal is now identified as the FT protein moving through phloem to the apex. Name this hypothetical hormone.","florigen","Florigen is the FT protein."],
+["Diversity","Woese's comparison of 16S rRNA sequences revealed this domain, whose members resemble eukaryotes in transcription machinery but lack peptidoglycan. Name it.","archaea,archaebacteria","The third domain of life."],
+["Diversity","This genus's Ti plasmid transfers T-DNA into plant cells and is the workhorse vector of plant transformation. Name the bacterium.","agrobacterium,agrobacterium tumefaciens","Causes crown gall tumors."],
+["Chemistry","Only this amino acid's side chain loops back to the backbone nitrogen, breaking alpha helices; its cis-trans isomerization is catalyzed by peptidyl-prolyl isomerases. Name it.","proline","Proline is a helix breaker."],
+["Chemistry","This kinetic constant equals the substrate concentration at which an enzyme reaches half of Vmax. Name it, symbolized K sub M.","km,michaelis constant,michaelis-menten constant","A low Km means high affinity."],
+["Chemistry","This secondary structure has 3.6 residues per turn and hydrogen bonds from residue i to i+4. Name it.","alpha helix,alpha-helix,helix","Backbone C=O of residue i bonds N-H of residue i+4."],
+["Chemistry","Hemoglobin's sigmoidal oxygen-binding curve reflects this phenomenon, in which binding at one subunit raises affinity at the others. Name it.","cooperativity,cooperative binding","Each bound O2 shifts subunits toward the high-affinity R state."],
+["Chemistry","Low pH and high CO2 lower hemoglobin's oxygen affinity in this effect, named for a Danish physiologist. Name it.","bohr effect,bohr","H+ and CO2 stabilize the T state, unloading O2 in active tissue."],
+["Chemistry","This entropy-driven effect buries nonpolar side chains in a protein core as water is released. Name it.","hydrophobic effect,hydrophobic interaction,hydrophobic","Water gains entropy when freed from ordered shells around nonpolar groups."],
+["Chemistry","A double-reciprocal plot of 1/v against 1/[S] linearizes Michaelis-Menten data. Name it after two biochemists (either name).","lineweaver-burk,lineweaver burk,lineweaver,burk,double reciprocal","The y-intercept is 1/Vmax and the x-intercept is -1/Km."],
+["Chemistry","Phospholipids possess hydrophilic heads and hydrophobic tails. Give this adjective, which starts with 'amphi'.","amphipathic,amphiphilic","Amphipathic molecules have both polar and nonpolar regions."],
+["Chemistry","A reaction with negative delta G that proceeds spontaneously is described by this term. Name it.","exergonic,spontaneous","Exergonic reactions release free energy."],
+["Cell","Mutations in lamin A, a component of this meshwork inside the nuclear envelope, cause progeria. Name this structure.","nuclear lamina,lamina","Lamins are intermediate filaments lining the inner nuclear membrane."],
+["Cell","Importins recognize this short basic amino acid sequence on cargo proteins to bring them through nuclear pores. Name it, or its abbreviation.","nuclear localization signal,nls","NLS sequences are rich in lysine and arginine."],
+["Cell","A gradient of the GTP-bound form of this small GTPase across the nuclear envelope gives nuclear transport its direction. Name it.","ran","Ran-GTP is high in the nucleus because RCC1 (its GEF) is chromatin-bound."],
+["Cell","Claudins and occludins form belts of these junctions that seal epithelial sheets and block paracellular leakage. Name them.","tight junctions,tight junction","Tight junctions form the paracellular seal of epithelia."],
+["Cell","Cadherins link neighboring cells' intermediate filaments at these spot-like anchoring junctions in skin and heart. Name them.","desmosomes,desmosome","Desmosomes anchor keratin or desmin filaments via desmoglein and desmocollin."],
+["Cell","Desmotubules run through these plasma-membrane-lined channels in plant cell walls. Name them.","plasmodesmata,plasmodesma","Plasmodesmata connect plant cytoplasms, much like gap junctions."],
+["Cell","Insulin receptors autophosphorylate this amino acid on their cytoplasmic domains, creating SH2-domain docking sites. Name it.","tyrosine","Receptor tyrosine kinases phosphorylate each other on tyrosines."],
+["Cell","This enzyme, activated by Gq, cleaves PIP2 into IP3 and diacylglycerol. Name it.","phospholipase c,plc","IP3 releases ER calcium; DAG activates protein kinase C."],
+["Cell","This four-EF-hand protein senses calcium and activates CaM kinases. Name it.","calmodulin","Calcium-bound calmodulin changes shape and binds target enzymes."],
+["Cell","Mannose-6-phosphate tags direct hydrolases from the Golgi to this acidic organelle. Name it.","lysosome,lysosomes","M6P receptors in the trans-Golgi sort enzymes to lysosomes."],
+["Cell","Double-membraned autophagosomes engulf organelles for delivery to lysosomes in this 'self-eating' process. Name it.","autophagy","Autophagy recycles cellular components, especially during starvation."],
+["Cell","Release of this mitochondrial electron carrier into the cytosol lets Apaf-1 assemble the apoptosome. Name it.","cytochrome c","Cytochrome c binds Apaf-1, which recruits and activates caspase-9."],
+["Cell","Bax and Bak permeabilize the outer mitochondrial membrane, opposed by Bcl-xL. Name this family, named for a B-cell lymphoma.","bcl-2,bcl2,bcl 2","Bcl-2 proteins include pro-apoptotic (Bax, Bak) and anti-apoptotic (Bcl-2, Bcl-xL) members."],
+["Cell","This motor walks toward the minus end of microtubules, carrying vesicles in retrograde transport. Name it.","dynein","Dynein also powers cilia and flagella beating."],
+["Cell","This motor walks toward microtubule plus ends and carries cargo in anterograde axonal transport. Name it.","kinesin","Most kinesins move toward the plus end, out toward the axon terminal."],
+["Cell","Animal cytokinesis uses a contractile ring of actin and this motor protein. Name it.","myosin,myosin ii","Myosin II slides actin filaments to pinch the cleavage furrow."],
+["Cell","Peter Agre discovered these channel proteins, which let water cross membranes rapidly. Name them.","aquaporin,aquaporins","Agre shared the 2003 Nobel Prize in Chemistry for aquaporins."],
+["Energetics","This glycolytic enzyme catalyzes the committed step and is inhibited by ATP and citrate. Name it.","phosphofructokinase,pfk,pfk-1","PFK-1 phosphorylates fructose-6-phosphate; AMP and F2,6BP activate it."],
+["Energetics","This enzyme cleaves fructose-1,6-bisphosphate into DHAP and glyceraldehyde-3-phosphate. Name it.","aldolase","Aldolase splits the six-carbon sugar into two three-carbon sugars."],
+["Energetics","The only citric acid cycle enzyme embedded in the inner mitochondrial membrane doubles as complex II. Name it.","succinate dehydrogenase,sdh,complex ii","It oxidizes succinate to fumarate and passes electrons to ubiquinone via FAD."],
+["Energetics","Aconitase isomerizes this six-carbon tricarboxylic acid to isocitrate. Name it.","citrate,citric acid","Citrate forms from acetyl-CoA plus oxaloacetate."],
+["Energetics","The oxygen-evolving complex with a Mn4CaO5 cluster belongs to this photosystem. Name it.","photosystem ii,photosystem 2,psii","PSII splits water, releasing O2 and supplying electrons."],
+["Energetics","Electron flow only around photosystem I, producing ATP without NADPH, is called this. Name it.","cyclic photophosphorylation,cyclic electron flow","Electrons cycle back to the cytochrome b6f complex, pumping protons."],
+["Energetics","Rubisco attaches CO2 to this five-carbon sugar bisphosphate, which the Calvin cycle regenerates. Name it, or its abbreviation.","rubp,ribulose bisphosphate","Ribulose-1,5-bisphosphate plus CO2 yields two 3-phosphoglycerate."],
+["Energetics","Stomata open at night in these plants, which store CO2 as malate in vacuoles. Name this pathway, abbreviated with three letters.","cam,crassulacean acid metabolism","Crassulacean acid metabolism saves water in succulents like pineapple."],
+["Energetics","This biotin-dependent mitochondrial enzyme converts pyruvate to oxaloacetate in gluconeogenesis. Name it.","pyruvate carboxylase","Acetyl-CoA allosterically activates pyruvate carboxylase."],
+["Energetics","Lactate released by muscle returns to the liver in this cycle, named for a husband-and-wife team. Name it.","cori cycle,cori","Carl and Gerty Cori won the 1947 Nobel Prize."],
+["Energetics","This highly branched storage polysaccharide is mobilized by phosphorylase. Name it.","glycogen","Glycogen has alpha-1,4 chains with alpha-1,6 branches."],
+["Energetics","The carnitine shuttle carries long-chain fatty acids into mitochondria for this process, which cleaves two carbons at a time. Name it.","beta oxidation,beta-oxidation,b-oxidation","Each round releases acetyl-CoA, NADH and FADH2."],
+["Energetics","Acetyl-CoA carboxylase makes this three-carbon donor for fatty acid synthesis. Name it.","malonyl-coa,malonyl coa,malonyl","Malonyl-CoA also inhibits carnitine acyltransferase I, blocking beta oxidation."],
+["Energetics","Glucose-6-phosphate dehydrogenase starts this pathway, which makes NADPH and ribose-5-phosphate. Name it.","pentose phosphate pathway,pentose phosphate,hmp shunt","G6PD deficiency causes hemolytic anemia under oxidative stress."],
+["Genetics","The Philadelphia chromosome fuses BCR to this tyrosine kinase gene in chronic myeloid leukemia. Name the gene.","abl,abl1","BCR-ABL is a constitutively active kinase targeted by imatinib."],
+["Genetics","Germline mutations of this tumor suppressor on 17p cause Li-Fraumeni syndrome. Name it.","p53,tp53","p53, the 'guardian of the genome,' halts the cell cycle or triggers apoptosis."],
+["Genetics","BRCA1 and BRCA2 aid repair of this lesion by homologous recombination. Name it.","double strand breaks,double-strand breaks,double strand break,dsb","Double-strand breaks cut both DNA strands."],
+["Genetics","Xeroderma pigmentosum arises from defects in this pathway that removes thymine dimers. Name it.","nucleotide excision repair,ner","NER excises a short oligonucleotide around bulky lesions."],
+["Genetics","Lynch syndrome results from loss of MutS and MutL homologs in this repair pathway. Name it.","mismatch repair,mmr","Mismatch repair fixes replication errors; its loss causes microsatellite instability."],
+["Genetics","Prader-Willi and Angelman syndromes arise from the same chromosome 15 deletion depending on parent of origin. Name this phenomenon.","genomic imprinting,imprinting","Imprinted genes are expressed from only one parent's copy."],
+["Genetics","This technique detects DNA fragments after gel transfer to a membrane and hybridization with a probe. Name it after its inventor.","southern blot,southern","Edwin Southern developed it in 1975; Northern and Western blots are named by pun."],
+["Genetics","This chain-terminating strategy uses nucleotides lacking a 3' hydroxyl. Name these, or the method's inventor.","dideoxynucleotides,ddntps,dideoxy,sanger","Without a 3' OH, the next phosphodiester bond cannot form."],
+["Genetics","These bacterial enzymes cut DNA at palindromic sequences and are central to cloning. Name them.","restriction enzymes,restriction endonucleases,restriction enzyme","Bacteria use them against phages, protecting their own DNA by methylation."],
+["Genetics","This Aequorea victoria protein, abbreviated with three letters, serves as a fluorescent reporter. Name it.","gfp,green fluorescent protein","Shimomura, Chalfie and Tsien shared the 2008 Nobel for GFP."],
+["Genetics","This assay uses histidine-requiring Salmonella strains to test whether chemicals are mutagenic. Name it.","ames test,ames","Mutagens cause revertants that grow without histidine."],
+["Genetics","One percent recombination frequency equals one of these map units, named for a Drosophila geneticist. Name it.","centimorgan,morgan,map unit","Thomas Hunt Morgan pioneered Drosophila genetics."],
+["Expression","In bacteria, this subunit of RNA polymerase holoenzyme recognizes the -10 and -35 promoter elements. Name it.","sigma,sigma factor","Sigma dissociates after initiation; core enzyme continues elongation."],
+["Expression","This complex is 147 base pairs of DNA wound around eight histones. Name it.","nucleosome","The histone octamer contains two each of H2A, H2B, H3 and H4."],
+["Expression","H3K9 trimethylation marks this tightly packed, transcriptionally silent chromatin. Name it.","heterochromatin","HP1 binds H3K9me3 to compact chromatin."],
+["Expression","DNMTs add methyl groups to cytosines in these CG-rich promoter regions. Name them.","cpg islands,cpg island,cpg","Methylated promoter CpG islands silence genes."],
+["Expression","In eukaryotes this polymerase transcribes rRNA genes in the nucleolus. Name it.","rna polymerase i,pol i","Pol II makes mRNA; Pol III makes tRNA and 5S rRNA."],
+["Expression","Aminoacyl-tRNA synthetases attach amino acids to this conserved 3' trinucleotide of tRNAs. Name it.","cca,cca tail","The amino acid attaches to the terminal adenosine."],
+["Expression","Peptidyl transferase activity resides in this RNA, making the ribosome a ribozyme. Name it.","rrna,ribosomal rna,23s rrna,28s rrna","Large-subunit rRNA catalyzes peptide bond formation."],
+["Expression","Bacterial translation begins with this modified methionine. Name it.","n-formylmethionine,formylmethionine,fmet","fMet-tRNA binds the AUG start codon in the P site."],
+["Expression","mRNAs with premature stop codons are degraded by this surveillance pathway, abbreviated NMD. Name it.","nonsense-mediated decay,nonsense mediated decay,nmd","NMD prevents truncated, possibly harmful proteins."],
+["Expression","HDACs remove acetyl groups from this family of proteins, tightening chromatin. Name it.","histones,histone","Deacetylated lysines restore histone positive charge, binding DNA tightly."],
+["Expression","Small RNAs load into this effector complex, abbreviated RISC, to cleave complementary mRNAs. Name its function: this process is called RNA ___.","interference,rnai","Fire and Mello won the 2006 Nobel for RNA interference."],
+["Expression","Jacob and Monod proposed this unit of a promoter, operator and linked structural genes. Name it.","operon","The lac operon is the classic example."],
+["Expression","Prusiner proposed these infectious misfolded proteins as the cause of scrapie and BSE. Name them.","prions,prion","Prusiner won the 1997 Nobel Prize for prions."],
+["Evolution","Sewall Wright pictured fitness as peaks and valleys over genotype space. Name this metaphor.","adaptive landscape,fitness landscape","Populations climb toward fitness peaks by selection."],
+["Evolution","Eldredge and Gould argued species stay stable for long periods, then change rapidly. Name this model.","punctuated equilibrium","Proposed in 1972 as an alternative to phyletic gradualism."],
+["Evolution","Asexual lineages irreversibly accumulate deleterious mutations in this ratchet, named for H. J. ___.","muller,muller's ratchet,mullers ratchet","Without recombination, the least-loaded class can be lost but not rebuilt."],
+["Evolution","Selection at one locus reduces variation at tightly linked neighbors in this effect. Name it with a transport-flavored name.","hitchhiking,genetic hitchhiking,selective sweep","Neutral alleles 'ride along' with a favored allele."],
+["Evolution","Selection favoring both extremes of a phenotype distribution is called this. Name it.","disruptive selection,disruptive","Disruptive selection can drive sympatric speciation."],
+["Evolution","Haldane's rule states that hybrids of this sex are sterile or inviable first. Name the sex, defined as the heterogametic one.","heterogametic","XY males in mammals, ZW females in birds."],
+["Evolution","This homeobox gene controls eye development in flies and mammals alike; ectopic expression grows eyes on legs. Name it.","pax6,eyeless,pax 6","Pax6 is a master control gene showing deep homology of eyes."],
+["Evolution","A group containing an ancestor and all of its descendants is called this. Name this adjective or noun.","monophyletic,clade","Clades are monophyletic; paraphyletic groups omit some descendants."],
+["Evolution","The 'Great Dying' about 252 million years ago ended this geologic period. Name it.","permian","The end-Permian extinction killed about 90% of marine species."],
+["Ecology","Hutchinson's n-dimensional hypervolume of conditions defines this ecological term. Name it.","niche","The niche is the set of conditions where a species can persist."],
+["Ecology","Primary succession on bare rock begins with these fungal-algal partnerships. Name them.","lichens,lichen","Lichens weather rock and build the first soil."],
+["Ecology","This element's cycle has no major atmospheric reservoir, so it often limits freshwater productivity. Name it.","phosphorus","Phosphorus cycles through rock and sediment, not the air."],
+["Ecology","Gross primary production minus autotroph respiration equals this quantity, abbreviated NPP. Name it.","net primary production,net primary productivity,npp","NPP is the energy available to consumers."],
+["Ecology","In this mimicry, a harmless species imitates a harmful one. Name it after a Victorian naturalist.","batesian,batesian mimicry","Henry Walter Bates described it in Amazonian butterflies."],
+["Ecology","Species with many small offspring, little parental care and unstable habitats are called this kind of selected. Name the letter strategy.","r-selected,r selected,r strategy,r-selection,r","r is the intrinsic rate of increase; K-selected species are the opposite."],
+["Ecology","Connell proposed that diversity peaks when disturbance is neither rare nor frequent. Name this hypothesis.","intermediate disturbance hypothesis,intermediate disturbance","Moderate disturbance prevents competitive exclusion without wiping out species."],
+["Ecology","Predator removal causing changes across multiple trophic levels is called this. Name it.","trophic cascade","Wolves in Yellowstone and sea otters in kelp forests are examples."],
+["Ecology","Below the photic zone lies this ocean zone with insufficient light for photosynthesis. Name it.","aphotic zone,aphotic","The aphotic zone lies below about 200 meters."],
+["Physiology","Loss of neurons in the substantia nigra depletes this catecholamine in Parkinson's disease. Name it.","dopamine","Levodopa (L-DOPA) is the standard treatment."],
+["Physiology","Myasthenia gravis arises from autoantibodies against this receptor at the neuromuscular junction. Name it.","acetylcholine receptor,nicotinic acetylcholine receptor,achr","Fewer working receptors cause fatigable weakness."],
+["Physiology","This synaptic cleft enzyme degrades acetylcholine and is inhibited by nerve agents. Name it.","acetylcholinesterase,ache","Blocking it leaves acetylcholine in the synapse."],
+["Physiology","Juxtaglomerular cells secrete this enzyme to start the renin-angiotensin cascade. Name it.","renin","Renin cleaves angiotensinogen to angiotensin I."],
+["Physiology","Thrombin cleaves this plasma protein to form fibrin. Name it.","fibrinogen","Fibrin strands polymerize into the clot mesh."],
+["Physiology","Rhodopsin's chromophore, derived from vitamin A, isomerizes upon light absorption. Name this chromophore.","retinal,11-cis retinal","Light converts 11-cis to all-trans retinal, activating opsin."],
+["Physiology","This cluster of cardiac cells in the right atrium acts as the pacemaker. Name it.","sa node,sinoatrial node,sinoatrial","The sinoatrial node sets the heart rate."],
+["Physiology","Epithelial cells of this type secrete mucus in the intestine and airways. Name them.","goblet cells,goblet cell,goblet","Goblet cells are named for their cup shape."],
+["Physiology","These antigen-presenting cells, named for their branched projections, bridge innate and adaptive immunity. Name them.","dendritic cells,dendritic cell,dendritic","Dendritic cells present antigen to naive T cells in lymph nodes."],
+["Physiology","HIV infects helper T cells through this co-receptor, named with two letters and a number. Name it.","cd4","CD4 is the primary receptor; CCR5 or CXCR4 serve as co-receptors."],
+["Physiology","Antibody diversity arises from this gene-segment rearrangement, abbreviated with three letters in parentheses. Name it.","v(d)j recombination,vdj recombination,v d j recombination,vdj","RAG1 and RAG2 cut DNA at recombination signal sequences."],
+["Physiology","This cytokine, abbreviated IL-2, is the principal T-cell growth factor. Name it.","il-2,il2,interleukin 2,interleukin-2","IL-2 drives clonal expansion of activated T cells."],
+["Physiology","Type I hypersensitivity involves IgE bound to these granule-containing cells. Name them.","mast cells,mast cell,mast","Cross-linked IgE triggers histamine release."],
+["Physiology","Germinal-center B cells undergo this process, a targeted point mutation of V genes. Name it.","somatic hypermutation","Activation-induced cytidine deaminase (AID) introduces the mutations."],
+["Plants","This hormone induces alpha-amylase in the barley aleurone layer and promotes bolting. Name it.","gibberellin,gibberellins,gibberellic acid,ga","Gibberellins also break seed dormancy."],
+["Plants","This blue-light receptor mediates phototropism. Name it.","phototropin","Phototropins are flavin-based receptor kinases."],
+["Plants","This lateral meristem produces bark. Name it.","cork cambium,phellogen","The phellogen makes cork (phellem) outward."],
+["Plants","This polymer impregnates xylem cell walls, making them rigid and waterproof. Name it.","lignin","Lignin is a phenolic polymer, the second most abundant on Earth."],
+["Plants","Root nodules of legumes contain leghemoglobin to protect nitrogenase in this process. Name it.","nitrogen fixation","Nitrogenase is oxygen-sensitive; leghemoglobin buffers O2."],
+["Plants","These fungal root symbioses improve phosphorus uptake. Name them.","mycorrhizae,mycorrhiza","About 80% of land plants form mycorrhizae."],
+["Diversity","Peptidoglycan thickness determines whether bacteria retain crystal violet in this stain. Name it.","gram stain,gram","Gram-positive cells have thick peptidoglycan and stain purple."],
+["Diversity","The outer membrane of Gram-negative bacteria carries this endotoxin-bearing molecule. Name it, or its abbreviation.","lipopolysaccharide,lps","Lipid A is the toxic component of LPS."],
+["Diversity","Bacillus and Clostridium form these dormant, heat-resistant structures. Name them.","endospore,endospores","Endospores survive boiling, drying and radiation."],
+["Diversity","Plasmodium belongs to this protist group, whose members have an apical complex. Name it.","apicomplexa,apicomplexans","The apical complex helps the parasite invade host cells."],
+["Diversity","This clade of molting animals includes arthropods and nematodes. Name it.","ecdysozoa","Ecdysozoans molt their cuticle (ecdysis)."],
+["Diversity","This protostome clade, with trochophore larvae and lophophores, includes mollusks and annelids. Name it.","lophotrochozoa,spiralia","Lophotrochozoans include mollusks, annelids and flatworms."]
+];
+const $=id=>document.getElementById(id);
+let tmr,left,tq=-1,qid=0,lastT="",recent=[],typer,S,cur,phase,ct=0,used=new Set();
+try{used=new Set(JSON.parse(localStorage.getItem("bsU")||"[]"))}catch(e){}
+const byLen=Q.map((_,i)=>i).sort((a,b)=>Q[a][1].length-Q[b][1].length),T=[0,1,2].map(k=>byLen.slice(Math.floor(k*Q.length/3),Math.floor((k+1)*Q.length/3)));
+function draw(t){ct=t;let p=T[t].filter(i=>!used.has(i));if(!p.length)p=Q.map((_,i)=>i).filter(i=>!used.has(i));if(!p.length){used.clear();p=T[t].slice()}
+let c=p.filter(i=>!recent.includes(Q[i][0]));if(!c.length)c=p;const i=c[Math.random()*c.length|0];used.add(i);try{localStorage.setItem("bsU",JSON.stringify([...used]))}catch(e){}
+recent.push(Q[i][0]);if(recent.length>2)recent.shift();qid++;return Q[i]}
+function lev(a,b){const m=[];for(let i=0;i<=a.length;i++){m[i]=[i];for(let j=1;j<=b.length;j++)m[i][j]=i?0:j}
+for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)m[i][j]=Math.min(m[i-1][j]+1,m[i][j-1]+1,m[i-1][j-1]+(a[i-1]==b[j-1]?0:1));return m[a.length][b.length]}
+function has(text,words,kw){if(text.includes(kw))return true;const tol=kw.length<5?0:kw.length<9?1:2;if(!tol)return false;
+const n=kw.split(" ").length;for(let i=0;i+n<=words.length;i++){if(lev(words.slice(i,i+n).join(" "),kw)<=tol)return true}return false}
+function grade(ans,q){let t=ans.toLowerCase().replace(/[^a-z0-9+.' -]/g," ").replace(/^(the|a|an)\s+/,"").replace(/\s+/g," ").trim();lastT=t;if(!t)return false;
+return q[2].split(",").map(x=>x.trim()).find(k=>lev(t,k)<=(k.length<4?0:k.length<8?1:2))||false}
+function typeQ(){clearInterval(typer);clearInterval(tmr);const t=cur[1];let i=0;$("q").textContent="";left=30;tick();typer=setInterval(()=>{i+=2;$("q").textContent=t.slice(0,i);if(i>=t.length){clearInterval(typer);startTimer()}},26)}
+function startTimer(){clearInterval(tmr);left=30;tick();tmr=setInterval(()=>{left-=.25;tick();if(left<=0){clearInterval(tmr);fire(true)}},250)}
+function tick(){const b=$("tmb");b.style.width=Math.max(0,left/30*100)+"%";b.style.background=left<10?"#c0392b":left<18?"#e0a030":"#2b9e57";$("clock").textContent=Math.max(0,Math.ceil(left))+"s"}
+
+const ISL=[["Lost Skull Island","Haunted Pirate Ships","ghost",0,"#9fd8c8"],["Mount Penglai","Bohai Mist Wraiths","fog",0,"#eef0f6"],["Huaguoshan","Dragon King’s Sea Guard","serpent",0,"#2a9d6f"],["Onogoro Island","Brine Whirlpool","swirl",0,"#7fb6d8"],["Ryūgū-jō","Ryūjin’s Tidal Surge","wave",0,"#2a7fb5"],["Lanka","Ravana’s Sea Guard","serpent",0,"#c0392b"],["Magnetic Mountain","Magnetic Reef","rock",0,"#555566"],["Island of the Roc","The Roc","bird",0,"#f1ece0"],["Island of the Ka","The Great Serpent","serpent",0,"#d9a441"],["Sekhet-Aaru","Demon-Headed Ferrymen","ghost",0,"#3d8f8a"],["Aeaea","Circe’s Enchanted Beasts","heads",2,"#8a6a4a"],["Ogygia","Calypso’s Tempest","swirl",0,"#6a8fb0"],["Erytheia","Geryon","heads",3,"#c0392b"],["Tír na nÓg","Veil of Mist","fog",0,"#d8ecdf"],["Hy-Brasil","Phantom Fog Bank","fog",0,"#c9d2dc"],["Avalon","Black Barge of Morgan","ghost",0,"#6a4a8a"],["Thule","Sea-Lung Ice Floes","rock",0,"#cfe8f5"],["Jötunheim Coast","Jörmungandr’s Coil","serpent",0,"#3a6a4a"],["Buyan","Koschei’s Storm","wave",0,"#5a5a8a"],["Aztlán","Obsidian Canoe Raiders","ghost",0,"#3a3a40"],["Hawaiki","Kanaloa’s Surge","wave",0,"#2a9db5"]];
+const BOSS=[["Scylla","heads",6,"#7a4a8a"],["Hydra","heads",5,"#3a8a4a"],["The Kraken","tent",8,"#6b2d5c"],["Giant Squid","tent",6,"#c0392b"]];
+const SH=[["Haunted Ship","#26393a","#a8e6d2","#6fe0c0"],["Cloud-Sailing Treasure Junk","#b3262c","#f2d48a","#2fa88a"],["Dragon-Keel River Skiff","#6b3f1d","#d9b36a","#c0392b"],["Ama-no-Iwafune","#8a8a85","#f3ecd9","#c0392b"],["Atakebune War-Turtle","#a82222","#e8dcc0","#d6a02a"],["Pushpaka Vimana Galleon","#d6a02a","#fff1c9","#b3262c"],["Sewn-Plank Dhow","#b98b4e","#f6efe0","#2a6f97"],["Baghlah Merchantman","#7a3b1d","#efe3c2","#c9892b"],["Cedar Ship of the Ka","#c49a5c","#ffffff","#2a6f97"],["Neshmet Sacred Barque","#d9c36a","#f6f1e1","#2fa8a0"],["The Argo","#7a4b22","#f2ead8","#2a6f97"],["Odysseus’s Penteconter","#1f1f24","#d8d2c0","#a88a3d"],["Golden Cup of Helios","#e8b22d","#ffe9a0","#c0392b"],["Manannán’s Wave-Sweeper","#cfd8dc","#eef3f5","#6fa8c4"],["Currach of Saint Brendan","#8b5a2b","#e6d3a8","#4a6b3a"],["Prydwen","#e9e3d0","#ffffff","#d4a017"],["Roman Liburna Ice-Breaker","#5b6770","#e8edf0","#9fb7c7"],["Skíðblaðnir","#5a3a1c","#c0392b","#e8dcc0"],["Novgorod Ushkuynik","#6b4a2b","#d9d2c3","#a83232"],["Royal Acalli War-Canoe","#3d7a4b","#f2e6c2","#2fa8a0"],["Tākitimu Double-Hulled Waka","#8a5a2b","#f0e4c8","#c0392b"]];
+const SKY=["linear-gradient(#ffb36b,#ffe4a8)","linear-gradient(#58b8ee,#cdeeff)","linear-gradient(#3a9be0,#bfe6ff)","linear-gradient(#e0605a,#ffb36b)","linear-gradient(#3b2a6b,#d9627a)","linear-gradient(#2a2440,#7a5a7a)"];
+const REW=[["Chest of doubloons","+150 gold","g"],["Cursed gem","+300 gold","g2"],["Repair kit","One extra hull point","r"],["Shield","Blocks one wrong answer","s"],["Hint charm","Reveals first letter and length","h"],["Skip scroll","Skip one question","k"]];
+const STG=[];ISL.forEach((n,i)=>{STG.push({i,name:n[0],obs:n[1],k:n[2],n:n[3],c:n[4],b:0});if(i%3==2){const b=BOSS[(i/3|0)%4];STG.push({i,name:b[0],obs:b[0],k:b[1],n:b[2],c:b[3],b:1})}});
+function shipSVG(c,b){const K="#2a2118";return `<svg viewBox="0 0 140 112" class="${b?"build":""}"><g class="p1"><path d="M10 68H130Q122 98 100 106H40Q18 98 10 68Z" fill="${c[0]}" stroke="${K}" stroke-width="4" stroke-linejoin="round"/><path d="M13 77H127" stroke="${c[2]}" stroke-width="5"/></g><g class="p2"><rect x="66" y="8" width="7" height="60" fill="#5a3a1c" stroke="${K}" stroke-width="3"/></g><g class="p3"><path d="M73 14Q118 28 114 60H73Z" fill="${c[1]}" stroke="${K}" stroke-width="3.5"/><path d="M66 22Q28 34 32 60H66Z" fill="${c[1]}" stroke="${K}" stroke-width="3.5"/><circle cx="92" cy="40" r="7" fill="${c[2]}" stroke="${K}" stroke-width="2.5"/></g><g class="p4"><path d="M70 8V0L98 5Z" fill="${K}"/><path d="M12 68L0 54" stroke="${K}" stroke-width="5"/></g></svg>`}
+function mon(k,n,c){const K="#2a2118",o=`stroke="${K}" stroke-width="5"`;let g="";
+if(k=="ghost")return `<div style="transform:scaleX(-1);opacity:.9;filter:drop-shadow(0 0 10px ${c})">${shipSVG(["#26393a",c,c])}</div>`;
+if(k=="fog")g=`<g fill="${c}" ${o}><circle cx="55" cy="105" r="34"/><circle cx="100" cy="85" r="42"/><circle cx="148" cy="108" r="32"/></g>`;
+else if(k=="serpent"){const d="M10 150Q40 30 85 120T150 110Q178 70 160 40";g=`<path d="${d}" fill="none" stroke="${K}" stroke-width="28" stroke-linecap="round"/><path d="${d}" fill="none" stroke="${c}" stroke-width="18" stroke-linecap="round"/><circle cx="162" cy="38" r="15" fill="${c}" ${o}/><circle cx="167" cy="34" r="4" fill="#fff"/>`}
+else if(k=="swirl")g=[80,60,40,20].map((r,j)=>`<ellipse cx="100" cy="125" rx="${r+20}" ry="${r/3+6}" fill="none" stroke="${j%2?K:c}" stroke-width="9"/>`).join("");
+else if(k=="wave")g=`<path d="M0 150V105Q30 20 105 50Q145 25 170 90Q190 80 200 105V150Z" fill="${c}" ${o}/>`;
+else if(k=="rock")g=`<path d="M8 150L52 62L82 100L122 28L172 150Z" fill="${c}" ${o} stroke-linejoin="round"/>`;
+else if(k=="bird")g=`<path d="M100 92Q50 10 0 62Q50 58 100 115Q150 58 200 62Q150 10 100 92Z" fill="${c}" ${o} stroke-linejoin="round"/><circle cx="100" cy="100" r="16" fill="${c}" ${o}/><path d="M100 104l16 6-16 4Z" fill="#e0a030"/>`;
+else{g=`<ellipse cx="100" cy="150" rx="62" ry="20" fill="${c}" ${o}/>`;const t=k=="heads";for(let i=0;i<n;i++){const x=t?30+i*(140/Math.max(1,n-1)):20+i*(160/Math.max(1,n-1)),h=40+(i%2)*28,p=`M${100+(x-100)*.3} 150Q${x+(i%2?25:-25)} 95 ${x} ${h}`;
+g+=`<path d="${p}" fill="none" stroke="${K}" stroke-width="20" stroke-linecap="round"/><path d="${p}" fill="none" stroke="${c}" stroke-width="12" stroke-linecap="round"/>`+(t?`<circle cx="${x}" cy="${h}" r="12" fill="${c}" ${o}/><circle cx="${x+4}" cy="${h-3}" r="3.5" fill="#fff"/>`:`<circle cx="${x}" cy="${h}" r="7" fill="${c}" ${o}/>`)}}
+return `<svg viewBox="0 0 200 160">${g}</svg>`}
+const lim=()=>(STG[S.st].b?3:2)+S.extra,need=()=>STG[S.st].b?5:3,tier=()=>STG[S.st].b?2:Math.min(2,S.ok+Math.floor(S.cleared/4));
+function say(h){$("fb").innerHTML=h}
+function enter(){const f=$("far");f.classList.remove("enter");void f.offsetWidth;f.classList.add("enter");$("obs").dataset.s=""}
+function newGame(){clearInterval(tmr);clearInterval(typer);$("ship").classList.remove("sink");S={st:0,cleared:0,ok:0,bad:0,gold:0,shield:0,hint:0,skip:0,extra:0,ship:["Sloop","#7a4b22","#f2ead8","#c9892b"]};cur=draw(tier());phase="ask";say("");enter();render()}
+function render(){const g=STG[S.st],a=phase=="ask",L=lim(),N=need(),sea=$("sea"),si=g.b?5:g.i%5;
+$("hull").innerHTML=Array.from({length:L},(_,k)=>`<i class="${k<S.bad?"x":""}"></i>`).join("");
+$("lvl").textContent=S.cleared+1;$("gold").textContent=S.gold;$("shd").textContent=S.shield;
+$("track").innerHTML=STG.map((s,i)=>`<i class="${s.b?"b ":""}${i<S.st?"d":i==S.st?"n":""}"></i>`).join("");
+$("btitle").textContent=(g.b?"Boss: ":"Island "+(g.i+1)+": ")+g.name;$("bsub").textContent=g.b?"Hardest questions. Five hits to win.":"Obstacle: "+g.obs;
+$("hpb").style.width=(N-S.ok)/N*100+"%";
+$("unit").textContent=cur[0];$("diff").innerHTML="Difficulty "+[0,1,2].map(k=>`<i class="${k<=ct?"on":""}"></i>`).join("");
+sea.style.setProperty("--sky",SKY[si]);sea.classList.toggle("night",si>=4);
+if($("obs").dataset.s!=S.st){$("obs").dataset.s=S.st;$("obs").firstElementChild.innerHTML=mon(g.k,g.n,g.c);$("isl").style.filter=`hue-rotate(${g.i*47%360}deg)`}
+if($("ship").dataset.k!=S.ship[0]){$("ship").dataset.k=S.ship[0];$("ship").innerHTML=shipSVG(S.ship.slice(1))}
+$("ship").style.left=(5+S.ok*34/N)+"%";
+$("fire").disabled=!a;$("ans").disabled=!a;$("hint").textContent="Hint ("+S.hint+")";$("skip").textContent="Skip ("+S.skip+")";$("hint").disabled=!a||!S.hint;$("skip").disabled=!a||!S.skip;
+$("next").hidden=a;if(a&&tq!==qid){tq=qid;typeQ()}if(a)$("ans").focus({preventScroll:true})}
+function burst(c){const f=$("fx");f.className="";void f.offsetWidth;f.className=c+" pop"}
+function hitFx(){burst("dmg");const e=$("sea");e.classList.remove("flash");void e.offsetWidth;e.classList.add("flash");const s=$("ship");s.classList.remove("hit");void s.offsetWidth;s.classList.add("hit")}
+function fire(to){if(phase!="ask")return;const v=$("ans").value;if(!to&&!v.trim())return;clearInterval(tmr);clearInterval(typer);$("q").textContent=cur[1];
+const good=!to&&grade(v,cur),pre=to?"Time’s up. ":"Incorrect. ";let m;
+if(good){S.ok++;S.gold+=25;burst("hit");m=`<b class="ok">Correct.</b>`+(good!=lastT?` Accepted as “${good}”.`:"")}
+else if(S.shield){S.shield--;hitFx();m=`<b class="bad">${pre}Your shield absorbs the hit.</b>`}
+else{S.bad++;hitFx();m=`<b class="bad">${pre}Your ship takes damage.</b>`}
+say(m+`<br>Answer: <b>${cur[2].split(",")[0]}</b>${cur[3]?" — "+cur[3]:""}`);$("ans").value="";phase="result";
+$("next").textContent=S.bad>=lim()?"Continue":S.ok>=need()?(STG[S.st].b?"Claim victory":"Make landfall"):"Next question";render()}
+function next(){if(S.bad>=lim())return sink();if(S.ok>=need())return clearStage();cur=draw(tier());phase="ask";say("");render()}
+function ov(t,p,b,f){$("ovt").textContent=t;$("ovp").textContent=p;$("ovb").textContent=b;$("ovb").onclick=()=>{$("ov").classList.remove("on");f()};$("ov").classList.add("on")}
+function sink(){$("ship").classList.add("sink");setTimeout(()=>ov("Ship lost","You reached stage "+(S.st+1)+" of "+STG.length+" with "+S.gold+" gold.","Start over",newGame),1300)}
+function clearStage(){const g=STG[S.st],pool=REW.filter(x=>x[2]!="r"||S.extra<2),r=pool[Math.random()*pool.length|0];
+if(r[2]=="g")S.gold+=150;else if(r[2]=="g2")S.gold+=300;else if(r[2]=="r")S.extra=Math.min(S.extra+1,2);else if(r[2]=="s")S.shield++;else if(r[2]=="h")S.hint++;else S.skip++;
+if(!g.b){S.cleared++;S.ship=SH[g.i]}const nx=STG[S.st+1];
+$("trl").innerHTML=g.b?`<div class="lv"><span>Boss</span><b>Down</b></div>`:`<div class="lv"><span>Level</span><b>${S.cleared+1}</b></div>`;
+$("trship").innerHTML=shipSVG(S.ship.slice(1),1);$("trn").textContent=g.b?"Boss defeated":S.ship[0];
+$("trs").textContent=g.b?"The beast sinks beneath the waves.":g.i==0?"The haunted ship joins your voyage.":"Your ship is rebuilt from the island’s legend.";
+$("trp").innerHTML=`Reward: <b>${r[0]}</b>, ${r[1]}`+(nx?`<br>Next: ${nx.b?"Boss, "+nx.name:"Island "+(nx.i+1)+", "+nx.name}`:"");
+$("tr").classList.remove("on");void $("tr").offsetWidth;$("tr").classList.add("on")}
+$("trb").onclick=()=>{$("tr").classList.remove("on");S.st++;if(S.st>=STG.length){S.st--;return ov("Voyage complete","Every island and boss is behind you. Final gold: "+S.gold+".","Sail again",newGame)}
+S.ok=0;S.bad=0;cur=draw(tier());phase="ask";say("");enter();render()};
+$("hint").onclick=()=>{if(!S.hint)return;S.hint--;const k=cur[2].split(",")[0],c=k.replace(/[^a-z0-9]/gi,""),w=k.split(/[\s-]+/).filter(Boolean).length;say(`Starts with <b>${c[0].toUpperCase()}</b>, ${c.length} letters`+(w>1?` in ${w} words.`:"."));render()};
+$("skip").onclick=()=>{if(!S.skip)return;S.skip--;cur=draw(ct);say("Question skipped.");render()};
+$("fire").onclick=()=>fire();$("next").onclick=next;
+$("ans").addEventListener("keydown",e=>{if(e.key=="Enter"){e.preventDefault();fire()}});
+$("hship").innerHTML=shipSVG(["#7a4b22","#f2ead8","#c9892b"]);
+$("play").onclick=()=>{$("home").classList.remove("on");newGame()};
+</script></body></html>
