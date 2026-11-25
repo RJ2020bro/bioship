@@ -26,5 +26,7 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: www
+      # GitHub sometimes needs a moment before a just-uploaded Pages artifact is visible
+      - run: sleep 12
       - id: deployment
         uses: actions/deploy-pages@v4
