@@ -1,6 +1,6 @@
 // Builds www/ (used by the PWA deploy, Capacitor and Electron) from index.html.
 // index.html is never modified: PWA tags are injected into the www/ copy only.
-import { readFileSync, writeFileSync, mkdirSync, cpSync, rmSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, cpSync, rmSync, existsSync, readdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 
 const root = new URL('..', import.meta.url).pathname;
@@ -11,6 +11,7 @@ mkdirSync(out, { recursive: true });
 let html = readFileSync(root + 'index.html', 'utf8');
 const h = createHash('sha256').update(html);
 for (const f of ['net.js', 'firebase-config.js', 'pwa/sw.js']) if (existsSync(root + f)) h.update(readFileSync(root + f));
+if (existsSync(root + 'sculpt')) for (const f of readdirSync(root + 'sculpt').sort()) h.update(readFileSync(root + 'sculpt/' + f));
 const version = h.digest('hex').slice(0, 12);
 
 const head = `
@@ -38,6 +39,7 @@ writeFileSync(out + 'sw.js', sw);
 cpSync(root + 'pwa/manifest.webmanifest', out + 'manifest.webmanifest');
 cpSync(root + 'pwa/icons', out + 'icons', { recursive: true });
 for (const f of ['net.js', 'firebase-config.js']) if (existsSync(root + f)) cpSync(root + f, out + f);
+if (existsSync(root + 'sculpt')) cpSync(root + 'sculpt', out + 'sculpt', { recursive: true });
 if (existsSync(root + '.nojekyll')) cpSync(root + '.nojekyll', out + '.nojekyll');
 
 console.log(`www/ built (cache version ${version})`);
