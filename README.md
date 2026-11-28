@@ -23,4 +23,4 @@ Install on Chromebook, phone or desktop from the Play link (Chrome: install icon
 Each file is a single self-contained HTML page (three.js r149, MIT, is inlined). Open it in a browser to play.
 
 ## Credits
-Concept, game design, and all 1,225 questions: Ryan Jian. Code written with Claude Code (Anthropic) under my direction; commits pushed by Claude Code appear under the "claude" account.
+Concept, game design, all 1,225 questions, and coding: Ryan Jian. The rest of the code was written with Claude Code (Anthropic) under my direction; commits pushed by Claude Code appear under the "claude" account.
